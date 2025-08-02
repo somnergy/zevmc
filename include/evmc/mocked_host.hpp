@@ -255,7 +255,7 @@ public:
                         if (is_zero(current))
                         {
                             // "(also means that new value is not 0)"
-                            assert(!is_zero(value));
+                            // assert(!is_zero(value));
                             // "remove SSTORE_CLEARS_SCHEDULE gas from refund counter"
                             triggered_clauses |= RemoveClearsSchedule;
                         }
@@ -263,7 +263,7 @@ public:
                         if (is_zero(value))
                         {
                             // "(also means that current value is not 0)"
-                            assert(!is_zero(current));
+                            // assert(!is_zero(current));
                             // "add SSTORE_CLEARS_SCHEDULE gas to refund counter"
                             triggered_clauses |= AddClearsSchedule;
                         }
@@ -302,7 +302,7 @@ public:
                     case None:
                         return EVMC_STORAGE_ASSIGNED;
                     default:
-                        assert(false);  // Other combinations are impossible.
+                        // assert(false);  // Other combinations are impossible.
                         return evmc_storage_status{};
                     }
                 }

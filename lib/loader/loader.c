@@ -21,6 +21,17 @@
 #define DLL_CLOSE(handle) FreeLibrary(handle)
 #define DLL_GET_CREATE_FN(handle, name) (evmc_create_fn)(uintptr_t) GetProcAddress(handle, name)
 #define DLL_GET_ERROR_MSG() NULL
+#elif defined(__has_include) && !__has_include(<dlfcn.h>)
+inline void* dlopen (const char*, int)      { return NULL; }
+inline void* dlsym  (void*, const char*)    { return NULL; }
+inline int   dlclose(void*)                 { return 0; }
+inline char* dlerror()                      { return (char*)"dlopen not supported"; }
+#define DLL_HANDLE void*
+#define DLL_OPEN(filename) dlopen(filename, 1)
+#define DLL_CLOSE(handle) dlclose(handle)
+// NOLINTNEXTLINE(performance-no-int-to-ptr)
+#define DLL_GET_CREATE_FN(handle, name) (evmc_create_fn)(uintptr_t) dlsym(handle, name)
+#define DLL_GET_ERROR_MSG() dlerror()
 #else
 #include <dlfcn.h>
 #define DLL_HANDLE void*

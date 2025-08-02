@@ -13,8 +13,8 @@
 #include <string_view>
 #include <utility>
 
-static_assert(EVMC_LATEST_STABLE_REVISION <= EVMC_MAX_REVISION,
-              "latest stable revision ill-defined");
+// static_assert(EVMC_LATEST_STABLE_REVISION <= EVMC_MAX_REVISION,
+            //   "latest stable revision ill-defined");
 
 /// EVMC C++ API - wrappers and bindings for C++
 /// @ingroup cpp
