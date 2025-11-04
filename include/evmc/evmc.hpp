@@ -175,10 +175,10 @@ inline bool operator==(const address& a, const address& b) noexcept
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
 
-    W fold = 0;
     for (size_t i = 0; i < (sizeof(a) / sizeof(W)); ++i)
-        fold |= aw[i] ^ bw[i];
-    return fold == 0;
+        if (aw[i] != bw[i])
+            return false;
+    return true;
 #else
     return load64le(&a.bytes[0]) == load64le(&b.bytes[0]) &&
            load64le(&a.bytes[8]) == load64le(&b.bytes[8]) &&
@@ -228,10 +228,10 @@ inline bool operator==(const bytes32& a, const bytes32& b) noexcept
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
 
-    W fold = 0;
     for (size_t i = 0; i < (sizeof(a) / sizeof(W)); ++i)
-        fold |= aw[i] ^ bw[i];
-    return fold == 0;
+        if (aw[i] != bw[i])
+            return false;
+    return true;
 #else
     return load64le(&a.bytes[0]) == load64le(&b.bytes[0]) &&
            load64le(&a.bytes[8]) == load64le(&b.bytes[8]) &&
