@@ -170,7 +170,7 @@ inline constexpr uint64_t fnv1a_by64(uint64_t h, uint64_t x) noexcept
 /// The "equal to" comparison operator for the evmc::address type.
 inline bool operator==(const address& a, const address& b) noexcept
 {
-#ifdef SP1
+#ifdef SP1TURBO
     using W = uint32_t;
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
@@ -223,7 +223,7 @@ inline constexpr bool operator>=(const address& a, const address& b) noexcept
 /// The "equal to" comparison operator for the evmc::bytes32 type.
 inline bool operator==(const bytes32& a, const bytes32& b) noexcept
 {
-#ifdef SP1
+#ifdef SP1TURBO
     using W = uint32_t;
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
@@ -956,7 +956,7 @@ struct hash<evmc::address>
     /// Hash operator using FNV1a-based folding.
     size_t operator()(const evmc::address& s) const noexcept
     {
-#ifdef SP1
+#ifdef SP1TURBO
         using W = uint32_t;
         const auto sw = reinterpret_cast<const W*>(&s);
 
@@ -981,7 +981,7 @@ struct hash<evmc::bytes32>
     /// Hash operator using FNV1a-based folding.
     size_t operator()(const evmc::bytes32& s) const noexcept
     {
-#ifdef SP1
+#ifdef SP1TURBO
         using W = uint32_t;
         const auto sw = reinterpret_cast<const W*>(&s);
 
