@@ -99,7 +99,7 @@ TEST(hex, from_hex_to_custom_type)
         return evmc::hex({evmc::from_hex<X>(in).value().bytes, sizeof(X)});
     };
 
-    // static_assert(evmc::from_hex<X>("01").value().bytes[3] == 0x01);  // Works in constexpr.
+    static_assert(evmc::from_hex<X>("01").value().bytes[3] == 0x01);  // Works in constexpr.
 
     EXPECT_EQ(test("f1f2f3f4"), "f1f2f3f4");
     EXPECT_EQ(test("01020304"), "01020304");

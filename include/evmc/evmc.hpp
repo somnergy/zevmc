@@ -13,8 +13,8 @@
 #include <string_view>
 #include <utility>
 
-// static_assert(EVMC_LATEST_STABLE_REVISION <= EVMC_MAX_REVISION,
-            //   "latest stable revision ill-defined");
+static_assert(EVMC_LATEST_STABLE_REVISION <= EVMC_MAX_REVISION,
+              "latest stable revision ill-defined");
 
 /// EVMC C++ API - wrappers and bindings for C++
 /// @ingroup cpp
@@ -58,7 +58,7 @@ struct alignas(uint32_t) address : evmc_address
     {}
 
     /// Explicit operator converting to bool.
-    inline explicit operator bool() const noexcept;
+    inline constexpr explicit operator bool() const noexcept;
 
     /// Implicit operator converting to bytes_view.
     inline constexpr operator bytes_view() const noexcept { return {bytes, sizeof(bytes)}; }
@@ -114,7 +114,7 @@ struct alignas(uint32_t) bytes32 : evmc_bytes32
     {}
 
     /// Explicit operator converting to bool.
-    inline explicit operator bool() const noexcept;
+    inline constexpr explicit operator bool() const noexcept;
 
     /// Implicit operator converting to bytes_view.
     inline constexpr operator bytes_view() const noexcept { return {bytes, sizeof(bytes)}; }
@@ -168,7 +168,7 @@ inline constexpr uint64_t fnv1a_by64(uint64_t h, uint64_t x) noexcept
 
 
 /// The "equal to" comparison operator for the evmc::address type.
-inline bool operator==(const address& a, const address& b) noexcept
+inline constexpr bool operator==(const address& a, const address& b) noexcept
 {
 #ifdef SP1TURBO
     using W = uint32_t;
@@ -187,7 +187,7 @@ inline bool operator==(const address& a, const address& b) noexcept
 }
 
 /// The "not equal to" comparison operator for the evmc::address type.
-inline bool operator!=(const address& a, const address& b) noexcept
+inline constexpr bool operator!=(const address& a, const address& b) noexcept
 {
     return !(a == b);
 }
@@ -221,7 +221,7 @@ inline constexpr bool operator>=(const address& a, const address& b) noexcept
 }
 
 /// The "equal to" comparison operator for the evmc::bytes32 type.
-inline bool operator==(const bytes32& a, const bytes32& b) noexcept
+inline constexpr bool operator==(const bytes32& a, const bytes32& b) noexcept
 {
 #ifdef SP1TURBO
     using W = uint32_t;
@@ -241,7 +241,7 @@ inline bool operator==(const bytes32& a, const bytes32& b) noexcept
 }
 
 /// The "not equal to" comparison operator for the evmc::bytes32 type.
-inline bool operator!=(const bytes32& a, const bytes32& b) noexcept
+inline constexpr bool operator!=(const bytes32& a, const bytes32& b) noexcept
 {
     return !(a == b);
 }
@@ -277,23 +277,23 @@ inline constexpr bool operator>=(const bytes32& a, const bytes32& b) noexcept
 }
 
 /// Checks if the given address is the zero address.
-inline bool is_zero(const address& a) noexcept
+inline constexpr bool is_zero(const address& a) noexcept
 {
     return a == address{};
 }
 
-inline address::operator bool() const noexcept
+inline constexpr address::operator bool() const noexcept
 {
     return !is_zero(*this);
 }
 
 /// Checks if the given bytes32 object has all zero bytes.
-inline bool is_zero(const bytes32& a) noexcept
+inline constexpr bool is_zero(const bytes32& a) noexcept
 {
     return a == bytes32{};
 }
 
-inline bytes32::operator bool() const noexcept
+inline constexpr bytes32::operator bool() const noexcept
 {
     return !is_zero(*this);
 }
@@ -951,7 +951,7 @@ template <>
 struct hash<evmc::address>
 {
     /// Hash operator using FNV1a-based folding.
-    size_t operator()(const evmc::address& s) const noexcept
+    constexpr size_t operator()(const evmc::address& s) const noexcept
     {
 #ifdef SP1TURBO
         using W = uint32_t;
@@ -976,7 +976,7 @@ template <>
 struct hash<evmc::bytes32>
 {
     /// Hash operator using FNV1a-based folding.
-    size_t operator()(const evmc::bytes32& s) const noexcept
+    constexpr size_t operator()(const evmc::bytes32& s) const noexcept
     {
 #ifdef SP1TURBO
         using W = uint32_t;

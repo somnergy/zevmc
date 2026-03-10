@@ -16,7 +16,7 @@ namespace evmc
 template <typename T>
 struct byte_traits : std::char_traits<char>
 {
-    // static_assert(sizeof(T) == 1, "type must be a byte");
+    static_assert(sizeof(T) == 1, "type must be a byte");
 
     using char_type = T;  ///< The byte type.
 

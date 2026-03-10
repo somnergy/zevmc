@@ -142,8 +142,8 @@ TEST(cpp, std_hash)
 {
     using namespace evmc::literals;
 
-    // static_assert(std::hash<evmc::address>{}({}) == static_cast<size_t>(0xd94d12186c0f2fb7));
-    // static_assert(std::hash<evmc::bytes32>{}({}) == static_cast<size_t>(0x4d25767f9dce13f5));
+    static_assert(std::hash<evmc::address>{}({}) == static_cast<size_t>(0xd94d12186c0f2fb7));
+    static_assert(std::hash<evmc::bytes32>{}({}) == static_cast<size_t>(0x4d25767f9dce13f5));
 
     EXPECT_EQ(std::hash<evmc::address>{}({}), static_cast<size_t>(0xd94d12186c0f2fb7));
     EXPECT_EQ(std::hash<evmc::bytes32>{}({}), static_cast<size_t>(0x4d25767f9dce13f5));
@@ -361,19 +361,19 @@ TEST(cpp, literals)
     constexpr auto zero_hash =
         0x0000000000000000000000000000000000000000000000000000000000000000_bytes32;
 
-    // static_assert(address1.bytes[0] == 0xa0);
-    // static_assert(address1.bytes[9] == 0xa9);
-    // static_assert(address1.bytes[10] == 0xd0);
-    // static_assert(address1.bytes[19] == 0xd9);
-    // static_assert(hash1.bytes[0] == 0x01);
-    // static_assert(hash1.bytes[10] == 0xa1);
-    // static_assert(hash1.bytes[31] == 0xd2);
-    // static_assert(zero_address == evmc::address{});
-    // static_assert(zero_hash == evmc::bytes32{});
+    static_assert(address1.bytes[0] == 0xa0);
+    static_assert(address1.bytes[9] == 0xa9);
+    static_assert(address1.bytes[10] == 0xd0);
+    static_assert(address1.bytes[19] == 0xd9);
+    static_assert(hash1.bytes[0] == 0x01);
+    static_assert(hash1.bytes[10] == 0xa1);
+    static_assert(hash1.bytes[31] == 0xd2);
+    static_assert(zero_address == evmc::address{});
+    static_assert(zero_hash == evmc::bytes32{});
 
-    // static_assert(0x00_address == 0x0000000000000000000000000000000000000000_address);
-    // static_assert(0x01_address == 0x0000000000000000000000000000000000000001_address);
-    // static_assert(0xf101_address == 0x000000000000000000000000000000000000f101_address);
+    static_assert(0x00_address == 0x0000000000000000000000000000000000000000_address);
+    static_assert(0x01_address == 0x0000000000000000000000000000000000000001_address);
+    static_assert(0xf101_address == 0x000000000000000000000000000000000000f101_address);
 
     EXPECT_EQ(0x0000000000000000000000000000000000000000_address, evmc::address{});
     EXPECT_EQ(0x0000000000000000000000000000000000000000000000000000000000000000_bytes32,
@@ -396,9 +396,9 @@ TEST(cpp, bytes32_from_uint)
     using evmc::bytes32;
     using evmc::operator""_bytes32;
 
-    // static_assert(bytes32{0} == bytes32{});
-    // static_assert(bytes32{3}.bytes[31] == 3);
-    // static_assert(bytes32{0xfe00000000000000}.bytes[24] == 0xfe);
+    static_assert(bytes32{0} == bytes32{});
+    static_assert(bytes32{3}.bytes[31] == 3);
+    static_assert(bytes32{0xfe00000000000000}.bytes[24] == 0xfe);
 
     EXPECT_EQ(bytes32{0}, bytes32{});
     EXPECT_EQ(bytes32{0x01},
@@ -418,9 +418,9 @@ TEST(cpp, address_from_uint)
     using evmc::address;
     using evmc::operator""_address;
 
-    // static_assert(address{0} == address{});
-    // static_assert(address{3}.bytes[19] == 3);
-    // static_assert(address{0xfe00000000000000}.bytes[12] == 0xfe);
+    static_assert(address{0} == address{});
+    static_assert(address{3}.bytes[19] == 3);
+    static_assert(address{0xfe00000000000000}.bytes[12] == 0xfe);
 
     EXPECT_EQ(address{0}, address{});
     EXPECT_EQ(address{0x01}, 0x0000000000000000000000000000000000000001_address);
@@ -435,7 +435,7 @@ TEST(cpp, address_to_bytes_view)
     using evmc::operator""_address;
 
     constexpr auto a = 0xa0a1a2a3a4a5a6a7a8a9b0b1b2b3b4b5b6b7b8b9_address;
-    // static_assert(static_cast<evmc::bytes_view>(a).size() == 20);
+    static_assert(static_cast<evmc::bytes_view>(a).size() == 20);
     const evmc::bytes_view v = a;
     EXPECT_EQ(v, (evmc::bytes{0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9,
                               0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9}));
@@ -446,7 +446,7 @@ TEST(cpp, bytes32_to_bytes_view)
     using evmc::operator""_bytes32;
 
     constexpr auto b = 0xa0a1a2a3a4a5a6a7a8a9b0b1b2b3b4b5b6b7b8b9c0c1c2c3c4c5c6c7c8c9d0d1_bytes32;
-    // static_assert(static_cast<evmc::bytes_view>(b).size() == 32);
+    static_assert(static_cast<evmc::bytes_view>(b).size() == 32);
     const evmc::bytes_view v = b;
     EXPECT_EQ(v, (evmc::bytes{0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xb0,
                               0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xc0, 0xc1,
