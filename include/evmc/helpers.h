@@ -127,7 +127,6 @@ static void evmc_free_result_memory(const struct evmc_result* result)
 static inline struct evmc_result evmc_make_result(enum evmc_status_code status_code,
                                                   int64_t gas_left,
                                                   int64_t gas_refund,
-                                                  int64_t gas_cost,
                                                   const uint8_t* output_data,
                                                   size_t output_size)
 {
@@ -153,7 +152,6 @@ static inline struct evmc_result evmc_make_result(enum evmc_status_code status_c
     result.status_code = status_code;
     result.gas_left = gas_left;
     result.gas_refund = gas_refund;
-    result.gas_cost = gas_cost;
     return result;
 }
 
