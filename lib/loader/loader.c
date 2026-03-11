@@ -21,8 +21,8 @@
 #define DLL_CLOSE(handle) FreeLibrary(handle)
 #define DLL_GET_CREATE_FN(handle, name) (evmc_create_fn)(uintptr_t) GetProcAddress(handle, name)
 #define DLL_GET_ERROR_MSG() NULL
-#elif defined(SP1) || defined(SP1TURBO)
-// No dynamic loading support on SP1/SP1TURBO targets.
+#elif defined(__has_include) && !__has_include(<dlfcn.h>)
+// No dynamic loading support (e.g. bare-metal targets).
 #define DLL_HANDLE void*
 #define DLL_OPEN(filename) ((void)(filename), (void*)0)
 #define DLL_CLOSE(handle) ((void)(handle), 0)
