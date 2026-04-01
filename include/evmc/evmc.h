@@ -121,6 +121,14 @@ struct evmc_message
     int64_t gas;
 
     /**
+     * The amount of state gas available to the message execution (EIP-8037).
+     *
+     * State gas is a separate gas dimension for state-creating operations.
+     * It draws from a reservoir allocated at transaction level.
+     */
+    int64_t state_gas;
+
+    /**
      * The recipient of the message.
      *
      * This is the address of the account which storage/balance/nonce is going to be modified
@@ -227,6 +235,7 @@ struct evmc_tx_context
     size_t blob_hashes_count;          /**< The number of blob hashes (EIP-4844). */
     const evmc_tx_initcode* initcodes; /**< The array of transaction initcodes (TXCREATE). */
     size_t initcodes_count;            /**< The number of transaction initcodes (TXCREATE). */
+    int64_t block_slot_number;         /**< The block slot number (EIP-7843). */
 };
 
 /**
@@ -487,17 +496,19 @@ struct evmc_result
     evmc_address create_address;
 
     /**
-     * Reserved data that MAY be used by a evmc_result object creator.
+     * The amount of state gas left after execution (EIP-8037).
      *
-     * This reserved 4 bytes together with 20 bytes from create_address form
-     * 24 bytes of memory called "optional data" within evmc_result struct
-     * to be optionally used by the evmc_result object creator.
-     *
-     * @see evmc_result_optional_data, evmc_get_optional_data().
-     *
-     * Also extends the size of the evmc_result to 64 bytes (full cache line).
+     * Returned to the caller so it can restore its own state_gas tracking.
      */
-    uint8_t padding[4];
+    int64_t state_gas_left;
+
+    /**
+     * The total state gas consumed during execution (EIP-8037).
+     *
+     * Accumulated across all frames (EVM charge_state_gas + Host-level charges).
+     * Used for block gas accounting: block_gas = max(regular, state).
+     */
+    int64_t state_gas_used;
 };
 
 
@@ -1048,10 +1059,17 @@ enum evmc_revision
     EVMC_OSAKA = 14,
 
     /**
+     * The Amsterdam revision.
+     *
+     * https://notes.ethereum.org/@ethpandaops/bal-devnet-3
+     */
+    EVMC_AMSTERDAM = 15,
+
+    /**
      * The unspecified EVM revision used for EVM implementations to expose
      * experimental features.
      */
-    EVMC_EXPERIMENTAL = 15,
+    EVMC_EXPERIMENTAL = 16,
 
     /** The maximum EVM revision supported. */
     EVMC_MAX_REVISION = EVMC_EXPERIMENTAL,
