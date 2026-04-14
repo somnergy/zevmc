@@ -170,7 +170,7 @@ inline constexpr uint64_t fnv1a_by64(uint64_t h, uint64_t x) noexcept
 /// The "equal to" comparison operator for the evmc::address type.
 inline constexpr bool operator==(const address& a, const address& b) noexcept
 {
-#if defined(SP1TURBO) || defined(SP1)
+#if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
     using W = uint32_t;
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
@@ -223,8 +223,8 @@ inline constexpr bool operator>=(const address& a, const address& b) noexcept
 /// The "equal to" comparison operator for the evmc::bytes32 type.
 inline constexpr bool operator==(const bytes32& a, const bytes32& b) noexcept
 {
-#if defined(SP1TURBO) || defined(SP1)
-    using W = size_t;
+#if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
+    using W = uint32_t;
     const auto aw = reinterpret_cast<const W*>(&a);
     const auto bw = reinterpret_cast<const W*>(&b);
 
