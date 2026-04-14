@@ -953,7 +953,7 @@ struct hash<evmc::address>
     /// Hash operator using FNV1a-based folding.
     constexpr size_t operator()(const evmc::address& s) const noexcept
     {
-#if defined(SP1TURBO) || defined(SP1)
+#if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
         using W = uint32_t;
         const auto sw = reinterpret_cast<const W*>(&s);
 
@@ -978,8 +978,8 @@ struct hash<evmc::bytes32>
     /// Hash operator using FNV1a-based folding.
     constexpr size_t operator()(const evmc::bytes32& s) const noexcept
     {
-#if defined(SP1TURBO) || defined(SP1)
-        using W = size_t;
+#if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
+        using W = uint32_t;
         const auto sw = reinterpret_cast<const W*>(&s);
 
         W fold = 0x811c9dc5;
