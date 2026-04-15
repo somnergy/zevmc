@@ -249,6 +249,16 @@ inline constexpr bool operator!=(const bytes32& a, const bytes32& b) noexcept
 /// The "less than" comparison operator for the evmc::bytes32 type.
 inline constexpr bool operator<(const bytes32& a, const bytes32& b) noexcept
 {
+#if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
+    // Use 32-bit loads to avoid 64-bit emulation overhead on RV32IM.
+    for (unsigned i = 0; i < 32; i += 4) {
+        const auto aw = load32be(&a.bytes[i]);
+        const auto bw = load32be(&b.bytes[i]);
+        if (aw != bw)
+            return aw < bw;
+    }
+    return false;
+#else
     return load64be(&a.bytes[0]) < load64be(&b.bytes[0]) ||
            (load64be(&a.bytes[0]) == load64be(&b.bytes[0]) &&
             (load64be(&a.bytes[8]) < load64be(&b.bytes[8]) ||
@@ -256,6 +266,7 @@ inline constexpr bool operator<(const bytes32& a, const bytes32& b) noexcept
               (load64be(&a.bytes[16]) < load64be(&b.bytes[16]) ||
                (load64be(&a.bytes[16]) == load64be(&b.bytes[16]) &&
                 load64be(&a.bytes[24]) < load64be(&b.bytes[24]))))));
+#endif
 }
 
 /// The "greater than" comparison operator for the evmc::bytes32 type.
