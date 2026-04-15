@@ -961,17 +961,14 @@ namespace std
 template <>
 struct hash<evmc::address>
 {
-    /// Hash operator using FNV1a-based folding.
+    /// Hash operator using direct word extraction.
+    /// Ethereum addresses are derived from keccak hashes with excellent distribution.
     constexpr size_t operator()(const evmc::address& s) const noexcept
     {
 #if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
-        using W = uint32_t;
-        const auto sw = reinterpret_cast<const W*>(&s);
-
-        W fold = 0x811c9dc5;
-        for (size_t i = 0; i < sizeof(s) / sizeof(W); ++i)
-            fold = (fold ^ sw[i]) * 0x01000193;
-        return fold;
+        // Use first uint32_t word directly: addresses are keccak-derived,
+        // so any 32-bit slice has full entropy. Saves 4 loads + 5 multiplies.
+        return *reinterpret_cast<const uint32_t*>(&s);
 #else
         using namespace evmc;
         using namespace fnv;
@@ -986,17 +983,15 @@ struct hash<evmc::address>
 template <>
 struct hash<evmc::bytes32>
 {
-    /// Hash operator using FNV1a-based folding.
+    /// Hash operator using direct word extraction.
+    /// bytes32 values are typically keccak outputs with excellent distribution,
+    /// so the first word alone is a high-quality hash — avoids 8 loads + 8 MULs.
     constexpr size_t operator()(const evmc::bytes32& s) const noexcept
     {
 #if defined(SP1TURBO) || defined(SP1) || defined(AIRBENDER)
-        using W = uint32_t;
-        const auto sw = reinterpret_cast<const W*>(&s);
-
-        W fold = 0x811c9dc5;
-        for (size_t i = 0; i < sizeof(s) / sizeof(W); ++i)
-            fold = (fold ^ sw[i]) * 0x01000193;
-        return fold;
+        // Use first uint32_t word directly: keccak outputs are uniformly distributed,
+        // so any 32-bit slice has full entropy. Saves 7 loads + 8 multiplies per lookup.
+        return *reinterpret_cast<const uint32_t*>(&s);
 #else
         using namespace evmc;
         using namespace fnv;
